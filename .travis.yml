@@ -1,0 +1,16 @@
+# After changing this file, check it on:
+#   http://lint.travis-ci.org/
+language: python
+sudo: false
+matrix:
+  include:
+    - python: 3.8
+      env:
+        - UPGRADE="--upgrade"
+before_install:
+    - travis_retry pip install pytest
+    - travis_retry pip install $UPGRADE numpy scipy
+script:
+    - python -m pytest -v backslash
+notifications:
+  email: false
