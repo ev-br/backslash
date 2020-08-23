@@ -1,9 +1,9 @@
 import numpy as np
 import scipy.linalg as sl
 
-KNOWN_FORMATS = {"general",}
+KNOWN_FORMATS = {"general", "triangular"}
 
-SOLVE_FUNCS = {"general": sl.solve,}
+SOLVE_FUNCS = {"general": sl.solve, "triangular": sl.solve_triangular, }
 
 
 def normalize_format(format):
@@ -44,7 +44,6 @@ def solve(a, b):
         solve_func = SOLVE_FUNCS[a.format]
     except KeyError:
         raise ValueError(f"No suitable solve_functions for {format}")
-
-
+    if a.format == "triangular" and np.allclose(a._data, np.tril(a._data)):
+        return solve_func(a._data, b, True)
     return solve_func(a._data, b)
-    
