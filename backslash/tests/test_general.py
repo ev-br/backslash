@@ -9,12 +9,12 @@ from backslash import Array, solve
 def test_ctor():
     arr = np.array([[1, 2, 3], [4, 5, 6]], dtype=float)
     with raises(TypeError):
-        Array(arr, meaning=42)    
+        Array(arr, meaning=42)
 
 
 def test_formats():
     arr = np.array([[1, 2, 3], [4, 5, 6]], dtype=float)
-    
+
     # unknown formats raise
     with raises(ValueError):
         Array(arr, format='oops')
@@ -44,3 +44,18 @@ def test_solve():
     x2 = sl.solve(arr, b)
 
     assert_allclose(x1, x2, atol=1e-14)
+
+
+def test_triangular():
+    arr = np.array([[3, 0, 0, 0],
+                    [2, 1, 0, 0],
+                    [1, 0, 1, 0],
+                    [1, 1, 1, 1]], dtype=float)
+    b = np.array([4, 2, 4, 2], dtype=float)
+
+    a = Array(arr, format="triangular")
+    x1 = solve(a, b)
+    x2 = sl.solve_triangular(arr, b)
+
+    assert_allclose(x1, x2, atol=1e-14)
+
